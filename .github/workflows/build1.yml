@@ -31,6 +31,6 @@ jobs:
           context: ./build-context-one
           file: ./build-context-one/Dockerfile
           push: true
-          tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ env.GITHUB_SHA }}
+          tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ GITHUB_SHA }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
