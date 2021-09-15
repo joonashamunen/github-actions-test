@@ -48,6 +48,7 @@ jobs:
           dockerfile: dockerfile
           image-name: buildd1
           test-command: echo 'yay'
+          gcp-project: ${{ secrets.GCP_PROJECT_ID }}
       - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
       - name: Deploy
         run: |-

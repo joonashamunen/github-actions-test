@@ -14,6 +14,9 @@ inputs:
     description: 'The test command to run'
     required: true
     default: 'yarn test'
+  gcp-project:
+    description: 'GCP project id'
+    required: true
 runs:
   using: "composite"
   steps:
@@ -36,5 +39,5 @@ runs:
         context: ${{ inputs.build-context }}
         file: ./${{ inputs.build-context}}/${{inputs.dockerfile}}
         push: true
-        tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/${{ inputs.image-name }}:${{ github.sha }}
+        tags: europe-docker.pkg.dev/${{ inputs.gcp-project }}/feedbackly/${{ inputs.image-name }}:${{ github.sha }}
 
