@@ -42,7 +42,7 @@ jobs:
       #     push: true
       #     tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ github.sha }}
       - name: Build and test context 1
-        uses: './.github/actions/build-and-test/action.yml'
+        uses: './.github/actions/build-and-test'
         with:
           build-context: ./build-context-one
           dockerfile: dockerfile
