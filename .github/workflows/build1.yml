@@ -33,16 +33,21 @@ jobs:
           registry: europe-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
-      - name: Build and push
-        id: docker_build
-        uses: docker/build-push-action@v2
+      # - name: Build and push
+      #   id: docker_build
+      #   uses: docker/build-push-action@v2
+      #   with:
+      #     context: ./build-context-one
+      #     file: ./build-context-one/Dockerfile
+      #     push: true
+      #     tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ github.sha }}
+      - name: Build and test context 1
+        uses: './.github/actions/build-and-test/action.yml'
         with:
-          context: ./build-context-one
-          file: ./build-context-one/Dockerfile
-          push: true
-          tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ github.sha }}
-      - name: Image digest
-        run: echo ${{ steps.docker_build.outputs.digest }}
+          build-context: ./build-context-one
+          dockerfile: dockerfile
+          image-name: buildd1
+          test-command: echo 'yay'
       - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
       - name: Deploy
         run: |-
