@@ -7,6 +7,19 @@ env:
   GKE_ZONE: europe-north1	   # TODO: update to cluster zone
   DEPLOYMENT_NAME: gke-hello-app # TODO: update deployment name if changed in deployment.yaml
 jobs:
+  generate_secrets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-node@v2
+        with: 
+          node-version: 12
+      - name: 'Unlock keys'
+        run: node index
+      - name: 'Replace envs in kustomize files'
+        run: |-
+          SECRETS_PAYLOAD=$(cat ./.secrets-dec/production.json |base64)
+          sed -i "s/SECRETS_PAYLOAD/${SECRETS_PAYLOAD}/g" kustomize/secrets/secrets.yml
+          cat ./kustomize/secrets/secrets.yml
   build:
     runs-on: ubuntu-latest
     steps:
@@ -33,14 +46,6 @@ jobs:
           registry: europe-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
-      # - name: Build and push
-      #   id: docker_build
-      #   uses: docker/build-push-action@v2
-      #   with:
-      #     context: ./build-context-one
-      #     file: ./build-context-one/Dockerfile
-      #     push: true
-      #     tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ github.sha }}
       - name: Build and test context 1
         uses: './.github/actions/build-and-test'
         with:
