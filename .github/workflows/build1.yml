@@ -39,8 +39,7 @@ jobs:
           tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ github.sha }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
-      - run: |-
-        gcloud container clusters get-credentials "$GKE_CLUSTER" --zone "$GKE_ZONE"
+      - run: gcloud container clusters get-credentials $GKE_CLUSTER --zone $GKE_ZONE
       - name: Deploy
         run: |-
           kubectl apply -f ./kubernetes/deployment.yml
