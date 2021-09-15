@@ -13,9 +13,11 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-
-      - name: Use gcloud CLI
-        run: gcloud info
+      # Access token for docker image registry
+      - name: Generate Access Token
+        id: generate_access_token
+        run: |
+          echo "::set-output name=token::$(gcloud auth print-access-token)"
       # build 
       - name: Set up Docker Buildx
         id: buildx
@@ -26,7 +28,11 @@ jobs:
         with:
           context: ./build-context-one
           file: ./build-context-one/Dockerfile
-          push: false
-          # tags: ${{ secrets.DOCKER_HUB_USERNAME }}/simplewhale:latest
+          push: true
+          registry: europe-docker.pkg.dev
+          repository: ${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1
+          tags: ${{ env.GITHUB_SHA }}
+          username: oauth2accesstoken
+          password: ${{ steps.generate_access_token.outputs.token }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
