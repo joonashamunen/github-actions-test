@@ -22,6 +22,13 @@ jobs:
       - name: Set up Docker Buildx
         id: buildx
         uses: docker/setup-buildx-action@v1
+      -
+        name: Login to GAR
+        uses: docker/login-action@v1
+        with:
+          registry: europe-docker.pkg.dev
+          username: _json_key
+          password: ${{ secrets.GCP_SA_KEY }}
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
@@ -29,10 +36,6 @@ jobs:
           context: ./build-context-one
           file: ./build-context-one/Dockerfile
           push: true
-          registry: europe-docker.pkg.dev
-          repository: ${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1
-          tags: ${{ env.GITHUB_SHA }}
-          username: oauth2accesstoken
-          password: ${{ steps.generate_access_token.outputs.token }}
+          tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1/${{ env.GITHUB_SHA }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
