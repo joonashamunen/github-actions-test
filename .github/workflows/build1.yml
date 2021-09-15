@@ -13,11 +13,6 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
-      # Access token for docker image registry
-      - name: Generate Access Token
-        id: generate_access_token
-        run: |
-          echo "::set-output name=token::$(gcloud auth print-access-token)"
       # build 
       - name: Set up Docker Buildx
         id: buildx
@@ -36,6 +31,6 @@ jobs:
           context: ./build-context-one
           file: ./build-context-one/Dockerfile
           push: true
-          tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1/${{ env.GITHUB_SHA }}
+          tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/build1:${{ env.GITHUB_SHA }}
       - name: Image digest
         run: echo ${{ steps.docker_build.outputs.digest }}
