@@ -21,20 +21,20 @@ runs:
       uses: docker/build-push-action@v2
       with:
         context: ${{ inputs.build-context }}
-        file: ./${{ inputs.build-context }}/${{dockerfile}}
-        tags: ${{image-name}}-test
+        file: ./${{ inputs.build-context }}/${{inputs.dockerfile}}
+        tags: ${{inputs.image-name}}-test
         load: true
     - name: Test
       id: test
       shell: bash
       run: |
-          docker run --rm ${{image-name}}-test ${{ inputs.test-command }}
+          docker run --rm ${{inputs.image-name}}-test ${{ inputs.test-command }}
     - name: Build and push
       id: docker_build
       uses: docker/build-push-action@v2
       with:
         context: ${{ inputs.build-context }}
-        file: ./${{ inputs.build-context}}/${{dockerfile}}
+        file: ./${{ inputs.build-context}}/${{inputs.dockerfile}}
         push: true
         tags: europe-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/feedbackly/${{ inputs.image-name }}:${{ github.sha }}
 
