@@ -45,7 +45,7 @@ jobs:
         uses: './.github/actions/build-and-test'
         with:
           build-context: ./build-context-one
-          dockerfile: dockerfile
+          dockerfile: Dockerfile
           image-name: buildd1
           test-command: echo 'yay'
           gcp-project: ${{ secrets.GCP_PROJECT_ID }}
