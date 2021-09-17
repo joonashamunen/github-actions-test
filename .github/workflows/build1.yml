@@ -47,6 +47,8 @@ jobs:
           registry: europe-docker.pkg.dev
           username: _json_key
           password: ${{ secrets.GCP_SA_KEY }}
+      - name: Test JS action
+        uses: './.github/actions/js'
       - name: Build and test context 1
         uses: './.github/actions/build-and-test'
         with:

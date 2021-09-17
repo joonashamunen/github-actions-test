@@ -1,0 +1,5 @@
+name: 'JS FS test'
+description: 'JS FS'
+runs:
+  using: 'node12'
+  main: 'index.js'
